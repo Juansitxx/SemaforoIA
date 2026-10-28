@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>Frente de Carros</folder>
+  <filename>Carros_ (179).jpg</filename>
+  <path>c:\Users\juanj\Desktop\SemaforoIA\imagenes\Frente de Carros\Carros_ (179).jpg</path>
+  <source>
+    <database>SemaforoIA_AutoLabeled</database>
+  </source>
+  <size>
+    <width>1100</width>
+    <height>675</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>171</xmin>
+      <ymin>190</ymin>
+      <xmax>1033</xmax>
+      <ymax>579</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>176</xmin>
+      <ymin>189</ymin>
+      <xmax>1034</xmax>
+      <ymax>582</ymax>
+    </bndbox>
+  </object>
+</annotation>

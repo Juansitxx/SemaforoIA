@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>Frente de Carros</folder>
+  <filename>Carros_ (11).jpg</filename>
+  <path>c:\Users\juanj\Desktop\SemaforoIA\imagenes\Frente de Carros\Carros_ (11).jpg</path>
+  <source>
+    <database>SemaforoIA_AutoLabeled</database>
+  </source>
+  <size>
+    <width>1080</width>
+    <height>765</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>40</xmin>
+      <ymin>92</ymin>
+      <xmax>967</xmax>
+      <ymax>708</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>910</xmin>
+      <ymin>110</ymin>
+      <xmax>1071</xmax>
+      <ymax>267</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>868</xmin>
+      <ymin>132</ymin>
+      <xmax>1026</xmax>
+      <ymax>352</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>815</xmin>
+      <ymin>116</ymin>
+      <xmax>1001</xmax>
+      <ymax>406</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>145</xmin>
+      <ymin>114</ymin>
+      <xmax>970</xmax>
+      <ymax>477</ymax>
+    </bndbox>
+  </object>
+</annotation>

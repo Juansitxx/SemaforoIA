@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>Frente de Carros</folder>
+  <filename>Carros_ (89).jpg</filename>
+  <path>c:\Users\juanj\Desktop\SemaforoIA\imagenes\Frente de Carros\Carros_ (89).jpg</path>
+  <source>
+    <database>SemaforoIA_AutoLabeled</database>
+  </source>
+  <size>
+    <width>82</width>
+    <height>46</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+</annotation>

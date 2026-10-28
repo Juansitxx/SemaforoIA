@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>Lateral de Carros</folder>
+  <filename>Carros_ - 2026-10-11T221911.006.jpg</filename>
+  <path>c:\Users\juanj\Desktop\SemaforoIA\imagenes\Lateral de Carros\Carros_ - 2026-10-11T221911.006.jpg</path>
+  <source>
+    <database>SemaforoIA_AutoLabeled</database>
+  </source>
+  <size>
+    <width>626</width>
+    <height>450</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>1</xmin>
+      <ymin>47</ymin>
+      <xmax>496</xmax>
+      <ymax>378</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>1</xmin>
+      <ymin>45</ymin>
+      <xmax>494</xmax>
+      <ymax>381</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>1</xmin>
+      <ymin>45</ymin>
+      <xmax>494</xmax>
+      <ymax>381</ymax>
+    </bndbox>
+  </object>
+</annotation>

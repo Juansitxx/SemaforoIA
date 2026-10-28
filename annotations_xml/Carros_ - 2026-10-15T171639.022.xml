@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>imagenes_fondo</folder>
+  <filename>Carros_ - 2026-10-15T171639.022.jpg</filename>
+  <path>c:\Users\juanj\Desktop\SemaforoIA\imagenes\imagenes_fondo\Carros_ - 2026-10-15T171639.022.jpg</path>
+  <source>
+    <database>SemaforoIA_AutoLabeled</database>
+  </source>
+  <size>
+    <width>547</width>
+    <height>365</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>270</xmin>
+      <ymin>141</ymin>
+      <xmax>312</xmax>
+      <ymax>170</ymax>
+    </bndbox>
+  </object>
+  <object>
+    <name>car</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <bndbox>
+      <xmin>279</xmin>
+      <ymin>216</ymin>
+      <xmax>314</xmax>
+      <ymax>247</ymax>
+    </bndbox>
+  </object>
+</annotation>

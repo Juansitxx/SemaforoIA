@@ -1,0 +1,33 @@
+{
+  "modelo": "MobileNetV3-Small",
+  "tarea": "clasificacion_de_recortes",
+  "clases": [
+    "fondo",
+    "vehiculo"
+  ],
+  "python": "3.12.3",
+  "pytorch": "2.11.0+cu128",
+  "torchvision": "0.26.0+cu128",
+  "cuda_compilacion": "12.8",
+  "dispositivo": "cuda:0",
+  "gpu": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "pesos_backbone": "ImageNet IMAGENET1K_V1",
+  "capa_salida": "nueva, inicializada aleatoriamente, sin entrenar",
+  "entrada": [
+    2,
+    3,
+    224,
+    224
+  ],
+  "salida": [
+    2,
+    2
+  ],
+  "parametros_totales": 1519906,
+  "parametros_entrenables": 2050,
+  "prueba_forward_backward": "correcta",
+  "pasos_optimizador": 0,
+  "entrenado_para_semaforoia": false,
+  "pesos_guardados": false,
+  "nota": "No son métricas de precisión ni una validación sobre vehículos reales."
+}

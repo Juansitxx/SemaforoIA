@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<annotation>
+  <folder>imagenes_fondo</folder>
+  <filename>calle02_recorte02.png</filename>
+  <path>c:\Users\juanj\Desktop\SemaforoIA\imagenes\imagenes_fondo\calle02_recorte02.png</path>
+  <source>
+    <database>SemaforoIA_AutoLabeled</database>
+  </source>
+  <size>
+    <width>250</width>
+    <height>125</height>
+    <depth>3</depth>
+  </size>
+  <segmented>0</segmented>
+</annotation>

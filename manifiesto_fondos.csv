@@ -1,0 +1,11 @@
+﻿archivo,clase,grupo_escena,particion,origen,origen_sha256,origen_ancho,origen_alto,x0,y0,x1,y1,ancho,alto,contenido,metodo
+imagenes_fondo/calle01_recorte01.png,fondo,calle01,,images (2).jfif,b0249eb0fce34e7e8f2720627f20cdea4ac902c329da1c23cdb698e122be2b66,335,597,0,420,180,597,180,177,calzada y marcas viales,recorte_rectangular_sin_reescalado
+imagenes_fondo/calle01_recorte02.png,fondo,calle01,,images (2).jfif,b0249eb0fce34e7e8f2720627f20cdea4ac902c329da1c23cdb698e122be2b66,335,597,185,410,335,597,150,187,"rampa, borde vial y césped",recorte_rectangular_sin_reescalado
+imagenes_fondo/calle01_recorte03.png,fondo,calle01,,images (2).jfif,b0249eb0fce34e7e8f2720627f20cdea4ac902c329da1c23cdb698e122be2b66,335,597,215,160,315,285,100,125,fachadas,recorte_rectangular_sin_reescalado
+imagenes_fondo/calle02_recorte01.png,fondo,calle02,,images.jfif,02b26929b77ded668f9bca4043d6a763d3c580bc5ae56b21c7fd1175e0e52b51,739,415,5,0,210,150,205,150,"edificios, poste y cielo",recorte_rectangular_sin_reescalado
+imagenes_fondo/calle02_recorte02.png,fondo,calle02,,images.jfif,02b26929b77ded668f9bca4043d6a763d3c580bc5ae56b21c7fd1175e0e52b51,739,415,220,0,470,125,250,125,edificios y cielo,recorte_rectangular_sin_reescalado
+imagenes_fondo/calle02_recorte03.png,fondo,calle02,,images.jfif,02b26929b77ded668f9bca4043d6a763d3c580bc5ae56b21c7fd1175e0e52b51,739,415,535,0,739,150,204,150,fachadas,recorte_rectangular_sin_reescalado
+imagenes_fondo/calle02_recorte04.png,fondo,calle02,,images.jfif,02b26929b77ded668f9bca4043d6a763d3c580bc5ae56b21c7fd1175e0e52b51,739,415,270,315,385,415,115,100,calzada y borde de separador,recorte_rectangular_sin_reescalado
+imagenes_fondo/calle03_recorte01.png,fondo,calle03,,vias_0.jpg,dde756fb271e0b86c8561aa0d9ef4b25d4b1be9b9934f799041380ee348a00c7,560,368,230,195,375,300,145,105,calzada y señalización amarilla,recorte_rectangular_sin_reescalado
+imagenes_fondo/calle03_recorte02.png,fondo,calle03,,vias_0.jpg,dde756fb271e0b86c8561aa0d9ef4b25d4b1be9b9934f799041380ee348a00c7,560,368,365,195,475,295,110,100,"calzada, señalización y poste",recorte_rectangular_sin_reescalado
+imagenes_fondo/calle03_recorte03.png,fondo,calle03,,vias_0.jpg,dde756fb271e0b86c8561aa0d9ef4b25d4b1be9b9934f799041380ee348a00c7,560,368,230,0,350,105,120,105,fachada comercial,recorte_rectangular_sin_reescalado

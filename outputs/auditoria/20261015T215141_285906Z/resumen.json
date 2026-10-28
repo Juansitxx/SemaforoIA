@@ -1,0 +1,25 @@
+{
+  "entrada": "/mnt/c/Users/juanj/Desktop/SemaforoIA/imagenes",
+  "total_archivos": 1039,
+  "imagenes_legibles": 1039,
+  "imagenes_con_error": 0,
+  "imagenes_unicas_por_pixeles": 1017,
+  "copias_identicas_adicionales": 22,
+  "imagenes_con_lado_menor_a_96_px": 59,
+  "formatos": {
+    ".jpg": 961,
+    ".png": 39,
+    ".webp": 39
+  },
+  "estado_dataset": "PENDIENTE_DE_ETIQUETADO_Y_REVISION",
+  "notas": [
+    "No se han modificado, movido ni eliminado las imágenes originales.",
+    "La auditoría no decide si una imagen contiene un vehículo, un dibujo o un collage.",
+    "Solo se detectan duplicados exactos tras orientar y convertir a RGB.",
+    "Imágenes parecidas, recodificadas o de una misma sesión requieren revisión manual.",
+    "clase: fondo o vehiculo solo para ejemplos adecuados de clasificación de recortes.",
+    "grupo_escena: mismo identificador para imágenes relacionadas de un mismo origen o sesión.",
+    "particion: train, val o test; todos los archivos de un grupo deben ir a la misma partición.",
+    "Separar grupos antes de aplicar aumento de datos; no asignar etiquetas por el nombre del archivo."
+  ]
+}
