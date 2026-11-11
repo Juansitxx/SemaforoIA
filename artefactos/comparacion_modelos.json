@@ -1,0 +1,109 @@
+{
+  "n_test": 247,
+  "anterior": {
+    "accuracy": 0.805668016194332,
+    "f1_macro": 0.797353981498277,
+    "errores": 48,
+    "por_clase": {
+      "bicicleta": {
+        "recall": 0.6,
+        "f1": 0.7248322147651007
+      },
+      "carro": {
+        "recall": 0.9555555555555556,
+        "f1": 0.9297297297297298
+      },
+      "moto": {
+        "recall": 0.8805970149253731,
+        "f1": 0.7375
+      }
+    },
+    "ejemplos": [
+      {
+        "ejemplo": "bicicleta_1",
+        "prediccion": "bicicleta",
+        "confianza": 0.9983243346214294,
+        "correcto": true
+      },
+      {
+        "ejemplo": "carro_1",
+        "prediccion": "carro",
+        "confianza": 0.7192781567573547,
+        "correcto": true
+      },
+      {
+        "ejemplo": "carro_2",
+        "prediccion": "carro",
+        "confianza": 0.5685853958129883,
+        "correcto": true
+      },
+      {
+        "ejemplo": "moto_1",
+        "prediccion": "moto",
+        "confianza": 0.9512297511100769,
+        "correcto": true
+      },
+      {
+        "ejemplo": "moto_2",
+        "prediccion": "moto",
+        "confianza": 0.9843243360519409,
+        "correcto": true
+      }
+    ],
+    "confianza_media_ejemplos": 0.8443483948707581,
+    "aciertos_ejemplos": 5
+  },
+  "actual": {
+    "accuracy": 0.9271255060728745,
+    "f1_macro": 0.9252354048964219,
+    "errores": 18,
+    "por_clase": {
+      "bicicleta": {
+        "recall": 0.9,
+        "f1": 0.9152542372881356
+      },
+      "carro": {
+        "recall": 0.9444444444444444,
+        "f1": 0.96045197740113
+      },
+      "moto": {
+        "recall": 0.9402985074626866,
+        "f1": 0.9
+      }
+    },
+    "ejemplos": [
+      {
+        "ejemplo": "bicicleta_1",
+        "prediccion": "bicicleta",
+        "confianza": 0.9999998807907104,
+        "correcto": true
+      },
+      {
+        "ejemplo": "carro_1",
+        "prediccion": "carro",
+        "confianza": 0.9999511241912842,
+        "correcto": true
+      },
+      {
+        "ejemplo": "carro_2",
+        "prediccion": "carro",
+        "confianza": 0.9999276399612427,
+        "correcto": true
+      },
+      {
+        "ejemplo": "moto_1",
+        "prediccion": "moto",
+        "confianza": 0.8980607986450195,
+        "correcto": true
+      },
+      {
+        "ejemplo": "moto_2",
+        "prediccion": "moto",
+        "confianza": 0.9999252557754517,
+        "correcto": true
+      }
+    ],
+    "confianza_media_ejemplos": 0.9795729398727417,
+    "aciertos_ejemplos": 5
+  }
+}

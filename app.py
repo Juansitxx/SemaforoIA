@@ -94,6 +94,7 @@ if not RUTA_MODELO.exists():
 modelo, CLASES, recortar, normalizar = cargar_modelo()
 metricas = leer_json("metricas_test.json")
 entrenamiento = leer_json("resumen_entrenamiento.json")
+comparacion = leer_json("comparacion_modelos.json")
 
 with st.sidebar:
     st.header("El modelo")
@@ -172,6 +173,47 @@ with pestana_metricas:
         c4.metric("Errores", metricas["errores"])
         st.caption("Todas las métricas se calcularon sobre el conjunto de prueba (15 % de los datos), "
                    "que no se usó ni para entrenar ni para elegir el mejor modelo.")
+
+        if comparacion:
+            anterior, actual = comparacion["anterior"], comparacion["actual"]
+            with st.container(border=True):
+                st.subheader("Modelo con más confianza")
+                st.caption(
+                    f"La versión anterior se entrenó con un conjunto desbalanceado "
+                    f"(711 carros frente a 33 bicicletas). Esta se entrenó con uno equilibrado. "
+                    f"Ambas medidas sobre las mismas {comparacion['n_test']} imágenes de prueba."
+                )
+                m1, m2, m3, m4 = st.columns(4)
+                m1.metric("F1 macro", f"{actual['f1_macro']:.1%}",
+                          f"{(actual['f1_macro']-anterior['f1_macro'])*100:+.1f} pp")
+                m2.metric("Accuracy", f"{actual['accuracy']:.1%}",
+                          f"{(actual['accuracy']-anterior['accuracy'])*100:+.1f} pp")
+                m3.metric("Errores", actual["errores"],
+                          actual["errores"] - anterior["errores"], delta_color="inverse")
+                m4.metric("Confianza media en los ejemplos",
+                          f"{actual['confianza_media_ejemplos']:.1%}",
+                          f"{(actual['confianza_media_ejemplos']-anterior['confianza_media_ejemplos'])*100:+.1f} pp")
+
+                st.markdown("**Recall por clase: cuántas de cada clase reconoce**")
+                st.table({
+                    "clase": list(actual["por_clase"]),
+                    "antes": [f"{v['recall']:.1%}" for v in anterior["por_clase"].values()],
+                    "ahora": [f"{v['recall']:.1%}" for v in actual["por_clase"].values()],
+                    "cambio": [f"{(actual['por_clase'][c]['recall']-anterior['por_clase'][c]['recall'])*100:+.1f} pp"
+                               for c in actual["por_clase"]],
+                })
+
+                st.markdown("**Confianza en cada imagen de ejemplo**")
+                st.table({
+                    "ejemplo": [e["ejemplo"] for e in actual["ejemplos"]],
+                    "antes": [f"{e['confianza']:.1%}" for e in anterior["ejemplos"]],
+                    "ahora": [f"{e['confianza']:.1%}" for e in actual["ejemplos"]],
+                })
+                st.caption(
+                    "Las dos versiones aciertan los 5 ejemplos, pero la actual lo hace con "
+                    "mucha menos duda. Solo `moto_1` baja, de 95.1 % a 89.8 %. "
+                    "Antes `carro_2` se quedaba en 56.9 %, por debajo del umbral de aviso."
+                )
 
         st.subheader("Por clase")
         st.table({

@@ -48,6 +48,10 @@ domine el encuadre. Midiendo **ambos modelos sobre el mismo conjunto de prueba**
 | **Recall bicicleta** | 60.0 % | **90.0 %** | **+30.0 pp** |
 | F1 moto | 73.8 % | 90.0 % | +16.2 pp |
 
+La app muestra esta comparación en un panel propio dentro de la pestaña
+*Métricas del modelo*, con el recall por clase y la confianza en cada imagen
+de ejemplo antes y después.
+
 El 98.5 % de accuracy que anunciaba la v1 no sobrevive al cambio de conjunto de
 prueba: sobre datos equilibrados caía al 80.6 %. Es el ejemplo de libro de por
 qué el accuracy engaña con clases desbalanceadas.
