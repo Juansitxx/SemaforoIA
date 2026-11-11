@@ -24,7 +24,7 @@ class AutoMockFinder:
     def exec_module(self, module):
         pass
 
-sys.meta_path.insert(0, AutoMockFinder(['official', 'tensorflow_io', 'tensorflow.compat.v1.estimator', 'seqeval']))
+sys.meta_path.insert(0, AutoMockFinder(['official', 'tensorflow_io', 'tensorflow.compat.v1.estimator', 'seqeval', 'tensorboard']))
 
 import tf_keras
 sys.modules['keras'] = tf_keras

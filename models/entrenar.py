@@ -25,7 +25,7 @@ class AutoMockFinder:
     def exec_module(self, module):
         pass
 
-sys.meta_path.insert(0, AutoMockFinder(['official', 'tensorflow_io', 'tensorflow.compat.v1.estimator', 'seqeval']))
+sys.meta_path.insert(0, AutoMockFinder(['official', 'tensorflow_io', 'tensorflow.compat.v1.estimator', 'seqeval', 'tensorboard']))
 
 # 2. Inyectar tf_keras como motor principal de Keras (Keras 2 nativo para TF Object Detection)
 import tf_keras
@@ -34,8 +34,9 @@ import tensorflow as tf
 tf.keras = tf_keras
 
 # Evitar TBNotInstalledError en entornos sin TensorBoard completo
-tf.summary.image = lambda *args, **kwargs: True
-tf.compat.v2.summary.image = lambda *args, **kwargs: True
+for _fn in ('image', 'scalar', 'histogram', 'text', 'audio', 'write', 'flush'):
+    setattr(tf.summary, _fn, lambda *args, **kwargs: True)
+    setattr(tf.compat.v2.summary, _fn, lambda *args, **kwargs: True)
 
 # 3. Compatibilidad para control_flow_ops en tf_slim (decodificación de imágenes)
 from tensorflow.python.ops import control_flow_ops
@@ -51,8 +52,22 @@ for p in [str(BASE_DIR / 'models'), str(RESEARCH_DIR), str(SLIM_DIR)]:
     if p not in sys.path:
         sys.path.insert(0, p)
 
+from object_detection import model_lib_v2
 from object_detection import model_main_tf2
 from absl import app
+
+model_lib_v2.LOG_EVERY = 10
+model_lib_v2.NUM_STEPS_PER_ITERATION = 10
+_orig_train_loop = model_lib_v2.train_loop
+
+def _patched_train_loop(*args, **kwargs):
+    train_steps = kwargs.get('train_steps') or 100
+    step_iter = min(10, max(1, int(train_steps)))
+    kwargs['num_steps_per_iteration'] = step_iter
+    kwargs['checkpoint_every_n'] = min(50, step_iter)
+    return _orig_train_loop(*args, **kwargs)
+
+model_lib_v2.train_loop = _patched_train_loop
 
 if __name__ == '__main__':
     app.run(model_main_tf2.main)
