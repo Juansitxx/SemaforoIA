@@ -1,15 +1,20 @@
 {
   "arquitectura": "MobileNetV2 (ImageNet) + cabeza Dropout-Linear(1280,256)-ReLU-Dropout-Linear(256,3)",
   "preentrenado_imagenet": true,
-  "epocas_ejecutadas": 15,
-  "mejor_epoca": 10,
-  "val_f1_macro": 0.9552110249784668,
-  "val_accuracy": 0.9924812030075187,
+  "epocas_ejecutadas": 46,
+  "mejor_epoca": 43,
+  "val_f1_macro": 0.9347407807425254,
+  "val_accuracy": 0.9392712550607287,
   "parametros_totales": 2552579,
   "lote": 32,
   "lr_cabeza": 0.001,
   "lr_fine_tuning": 0.0001,
   "bloques_descongelados": 5,
-  "pytorch": "2.14.1+cu130",
-  "dispositivo": "cuda"
+  "pytorch": "2.15.0+cpu",
+  "dispositivo": "cpu",
+  "imagenes_entrenamiento": {
+    "bicicleta": 420,
+    "carro": 420,
+    "moto": 311
+  }
 }
