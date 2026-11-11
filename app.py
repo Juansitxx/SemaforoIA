@@ -96,13 +96,19 @@ metricas = leer_json("metricas_test.json")
 entrenamiento = leer_json("resumen_entrenamiento.json")
 comparacion = leer_json("comparacion_modelos.json")
 
+PESO_MB = RUTA_MODELO.stat().st_size / 1048576
+# Separador de miles con punto, como se escribe en español.
+PARAMETROS = f"{entrenamiento.get('parametros_totales', 0):,}".replace(",", ".")
+
 with st.sidebar:
     st.header("El modelo")
     st.markdown(
         "- **Arquitectura:** MobileNetV2 preentrenada en ImageNet\n"
         "- **Cabeza nueva:** Dropout → Linear → ReLU → Dropout → Linear(3)\n"
         "- **Entrada:** 224 × 224 px\n"
-        f"- **Clases:** {', '.join(CLASES)}"
+        f"- **Clases:** {', '.join(CLASES)}\n"
+        f"- **Tamaño del archivo:** {PESO_MB:.1f} MB\n"
+        f"- **Parámetros:** {PARAMETROS}"
     )
     if metricas:
         st.divider()
@@ -173,6 +179,12 @@ with pestana_metricas:
         c4.metric("Errores", metricas["errores"])
         st.caption("Todas las métricas se calcularon sobre el conjunto de prueba (15 % de los datos), "
                    "que no se usó ni para entrenar ni para elegir el mejor modelo.")
+        st.caption(
+            f"El archivo del modelo pesa **{PESO_MB:.1f} MB** y tiene **{PARAMETROS} parámetros**. "
+            "MobileNetV2 está diseñada para ser ligera: una ResNet50 rondaría los 100 MB y 25 "
+            f"millones de parámetros. Por eso la inferencia tarda "
+            f"{metricas.get('latencia', {}).get('cpu_ms', '?')} ms en CPU."
+        )
 
         if comparacion:
             anterior, actual = comparacion["anterior"], comparacion["actual"]
