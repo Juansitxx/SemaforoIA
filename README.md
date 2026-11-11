@@ -40,11 +40,42 @@ imágenes más limpias y menos cantidad, bájalo si te quedas corto de volumen.
 
 ## Uso
 
+El pipeline completo, en el orden en que se ejecuta:
+
 ```bash
 python recolectar.py openimages     # vía principal: etiquetas verificadas
 python recolectar.py buscar         # complemento: scraping de Bing (ruidoso)
 python limpiar.py recolectado       # deduplica, filtra pequeñas y corruptas
+python preparar.py                  # reparte 70/15/15 y cachea a 256 px
+python entrenar.py 6                # dos fases; el argumento son épocas de fase 2
+python evaluar.py modelo/mobilenetv2_semaforo.pt artefactos
+python comparar.py artefactos_viejo/metricas_test.json artefactos/metricas_test.json
 ```
+
+`entrenar.py` espera un `modelo_base.pt` del que partir: el checkpoint que esté
+en producción. Inicializar desde ahí en vez de desde ImageNet puro conserva lo
+que el modelo ya aprendió del dataset original.
+
+`evaluar.py` acepta ruta de modelo y carpeta de salida, así que se puede correr
+sobre dos modelos distintos y comparar con `comparar.py` sobre el **mismo**
+conjunto de prueba. Comparar métricas calculadas sobre conjuntos diferentes no
+significa nada, y es justo el error que hacía parecer que la v1 tenía 98.5 %.
+
+## Resultado de la primera ejecución (11-11-2026)
+
+Con 1645 imágenes equilibradas, medido contra el modelo que estaba en producción
+sobre el mismo conjunto de prueba de 247 imágenes:
+
+| Métrica | v1 | v2 | Δ |
+|---|---|---|---|
+| Accuracy | 80.6 % | 92.7 % | +12.1 pp |
+| F1 macro | 79.7 % | 92.5 % | +12.8 pp |
+| Recall bicicleta | 60.0 % | 90.0 % | +30.0 pp |
+
+Hallazgo: **la fase de fine-tuning no aportó**. La fase 1 llegó a F1 0.952 en
+validación y la fase 2 se quedó en 0.935, sobreajustando. Con el extractor ya
+ajustado a la tarea desde la v1, la fase 2 sobra o necesita una tasa de
+aprendizaje mucho menor. A tener en cuenta en la siguiente vuelta.
 
 Las imágenes quedan en `recolectado/<clase>/`. Lo que `limpiar.py` descarta no se
 borra: se mueve a `descartadas/<motivo>/` por si hay que rescatar algo.
