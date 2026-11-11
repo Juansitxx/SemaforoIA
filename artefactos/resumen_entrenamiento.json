@@ -1,0 +1,15 @@
+{
+  "arquitectura": "MobileNetV2 (ImageNet) + cabeza Dropout-Linear(1280,256)-ReLU-Dropout-Linear(256,3)",
+  "preentrenado_imagenet": true,
+  "epocas_ejecutadas": 15,
+  "mejor_epoca": 10,
+  "val_f1_macro": 0.9552110249784668,
+  "val_accuracy": 0.9924812030075187,
+  "parametros_totales": 2552579,
+  "lote": 32,
+  "lr_cabeza": 0.001,
+  "lr_fine_tuning": 0.0001,
+  "bloques_descongelados": 5,
+  "pytorch": "2.14.1+cu130",
+  "dispositivo": "cuda"
+}

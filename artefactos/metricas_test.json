@@ -1,0 +1,55 @@
+{
+  "accuracy": 0.9849624060150376,
+  "f1_macro": 0.9073643410852713,
+  "n_test": 133,
+  "errores": 2,
+  "por_clase": {
+    "bicicleta": {
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1": 0.75,
+      "soporte": 5,
+      "auc": 0.653125
+    },
+    "carro": {
+      "precision": 0.9907407407407407,
+      "recall": 1.0,
+      "f1": 0.9953488372093023,
+      "soporte": 107,
+      "auc": 0.9636951833213516
+    },
+    "moto": {
+      "precision": 0.9545454545454546,
+      "recall": 1.0,
+      "f1": 0.9767441860465116,
+      "soporte": 21,
+      "auc": 0.9970238095238095
+    }
+  },
+  "matriz_confusion": [
+    [
+      3,
+      1,
+      1
+    ],
+    [
+      0,
+      107,
+      0
+    ],
+    [
+      0,
+      0,
+      21
+    ]
+  ],
+  "clases": [
+    "bicicleta",
+    "carro",
+    "moto"
+  ],
+  "latencia": {
+    "cpu_ms": 23.8,
+    "gpu_ms": 5.3
+  }
+}
