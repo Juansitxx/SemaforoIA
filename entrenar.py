@@ -131,6 +131,10 @@ print("extraidas en {:.0f} s ({} train, {} val)".format(
 
 optimizador = torch.optim.Adam(modelo.classifier.parameters(), lr=1e-3)
 historial = []
+# El mejor estado se sigue en LAS DOS fases. Partiendo de un modelo ya ajustado,
+# la cabeza converge en un par de epocas y el fine-tuning posterior puede
+# empeorar: quedarse solo con el mejor de la fase 2 tira ese optimo.
+mejor_f1, mejor_estado, mejor_epoca, mejor_fase = -1.0, None, 0, 0
 for epoca in range(1, EPOCAS_CABEZA + 1):
     modelo.classifier.train()
     orden = torch.randperm(len(rasgos_tr))
@@ -149,6 +153,9 @@ for epoca in range(1, EPOCAS_CABEZA + 1):
     acc_va = sum(1 for r, p in zip(etiq_va.tolist(), pred_va) if r == p) / len(pred_va)
     historial.append({"fase": 1, "epoca": epoca, "perdida": perdida_total / len(orden),
                       "val_accuracy": acc_va, "val_f1_macro": f1_va})
+    if f1_va > mejor_f1:
+        mejor_f1, mejor_epoca, mejor_fase = f1_va, epoca, 1
+        mejor_estado = {k: v.clone() for k, v in modelo.state_dict().items()}
     if epoca % 10 == 0:
         print("  epoca {:2d}  perdida {:.4f}  val F1 {:.4f}".format(
             epoca, historial[-1]["perdida"], f1_va), flush=True)
@@ -166,7 +173,6 @@ cargador_tr = DataLoader(Carpeta("train", aumentada), batch_size=LOTE, shuffle=T
 cargador_va = DataLoader(Carpeta("val", determinista), batch_size=LOTE, shuffle=False, num_workers=0)
 optimizador = torch.optim.Adam([p for p in modelo.parameters() if p.requires_grad], lr=1e-4)
 
-mejor_f1, mejor_estado, mejor_epoca = -1.0, None, 0
 for epoca in range(1, EPOCAS_FINETUNE + 1):
     t0 = time.perf_counter()
     modelo.train()
@@ -183,7 +189,7 @@ for epoca in range(1, EPOCAS_FINETUNE + 1):
                       "val_accuracy": acc_va, "val_f1_macro": f1_va})
     marca = ""
     if f1_va > mejor_f1:
-        mejor_f1, mejor_epoca = f1_va, EPOCAS_CABEZA + epoca
+        mejor_f1, mejor_epoca, mejor_fase = f1_va, EPOCAS_CABEZA + epoca, 2
         mejor_estado = {k: v.clone() for k, v in modelo.state_dict().items()}
         marca = "  <- mejor"
     print("  epoca {}/{}  perdida {:.4f}  val acc {:.4f}  val F1 {:.4f}  ({:.0f}s){}".format(
@@ -208,6 +214,7 @@ resumen = {
     "preentrenado_imagenet": True,
     "epocas_ejecutadas": len(historial),
     "mejor_epoca": mejor_epoca,
+    "mejor_fase": mejor_fase,
     "val_f1_macro": mejor_f1,
     "val_accuracy": next(h["val_accuracy"] for h in historial if h["epoca"] == mejor_epoca),
     "parametros_totales": sum(p.numel() for p in modelo.parameters()),

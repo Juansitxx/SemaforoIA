@@ -72,10 +72,27 @@ sobre el mismo conjunto de prueba de 247 imágenes:
 | F1 macro | 79.7 % | 92.5 % | +12.8 pp |
 | Recall bicicleta | 60.0 % | 90.0 % | +30.0 pp |
 
-Hallazgo: **la fase de fine-tuning no aportó**. La fase 1 llegó a F1 0.952 en
-validación y la fase 2 se quedó en 0.935, sobreajustando. Con el extractor ya
-ajustado a la tarea desde la v1, la fase 2 sobra o necesita una tasa de
-aprendizaje mucho menor. A tener en cuenta en la siguiente vuelta.
+### Dos hallazgos para la siguiente vuelta
+
+**1. La fase de fine-tuning no aportó.** La fase 1 llegó a F1 0.961 en validación
+y la fase 2 no superó 0.921 en ninguna de sus 6 épocas, con la pérdida de
+entrenamiento bajando mientras la validación empeoraba. Partiendo de un modelo ya
+ajustado a la tarea, la fase 2 sobra o necesita una tasa de aprendizaje mucho
+menor.
+
+**2. Mejor validación no significa mejor test.** El seguimiento del mejor estado
+cubría solo la fase 2, así que se descartaba el óptimo de la fase 1. Al
+corregirlo, el modelo seleccionado subió de 0.935 a 0.961 en validación... y
+**bajó** de 92.5 % a 91.0 % de F1 macro en test.
+
+Con 247 imágenes de validación, elegir la mejor época sobre ese conjunto se
+sobreajusta a él. La diferencia en test son 4 imágenes de 247, dentro del ruido,
+así que los dos modelos son estadísticamente indistinguibles. Se conservó en
+producción el primero, por estar ya verificado.
+
+La correccion del seguimiento sigue estando en `entrenar.py` porque es correcta:
+no mirar la fase 1 era un fallo real. Pero la leccion es que la decision de que
+modelo desplegar se toma sobre el conjunto de prueba, nunca sobre validacion.
 
 Las imágenes quedan en `recolectado/<clase>/`. Lo que `limpiar.py` descarta no se
 borra: se mueve a `descartadas/<motivo>/` por si hay que rescatar algo.
