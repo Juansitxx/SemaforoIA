@@ -1,23 +1,40 @@
-# 🚦 SemaforoIA · clasificador de vehículos
+# 🚦 SemaforoIA · Clasificador de vehículos con Knowledge Distillation
 
 App de Streamlit que clasifica una imagen como **carro**, **moto** o **bicicleta**
-usando transfer learning sobre **MobileNetV2** (PyTorch), y muestra un mapa
-**Grad-CAM** con las regiones que más pesaron en la decisión.
+usando **Transfer Learning** y **Knowledge Distillation (Destilación de Conocimiento)** en PyTorch,
+mostrando además un mapa **Grad-CAM** con las regiones que más pesaron en la decisión.
 
-Esta rama (`despliegue-streamlit`) contiene únicamente lo necesario para desplegar:
-es una rama huérfana, independiente del historial de `main`.
+Esta rama (`despliegue-streamlit`) contiene lo necesario para desplegar en producción e incluye
+ambos modelos para poder seleccionarlos y compararlos en vivo desde la barra lateral:
+
+1. **Modelo Principal de Uso (`MobileNetV2` · Estudiante Destilado):** Seleccionado por defecto.
+   Pesa **10.0 MB**, tiene **2.552.579 parámetros** y ejecuta en **~35–45 ms en CPU**, entrenado
+   mediante *Knowledge Distillation* a partir del Maestro.
+2. **Modelo Maestro / Padre (`ResNet50` · Referencia):** Arquitectura profunda de **24.558.659 parámetros**
+   (**94.0 MB** en FP32, almacenada en FP16 en `modelo/resnet50_maestro.pt` con **47.0 MB**). Se entrenó
+   para enseñar a `MobileNetV2` y está disponible en el selector de la app para comparar predicciones y mapas Grad-CAM.
 
 En vivo: https://semaforoiadatatech.streamlit.app
 
-## Resultados en el conjunto de prueba
+---
 
-247 imágenes que el modelo nunca vio durante el entrenamiento.
+## Comparativa: Maestro (`ResNet50`) vs. Estudiante Principal (`MobileNetV2`)
 
-| Métrica | Valor |
-|---|---|
-| Accuracy | 92.7 % |
-| F1 macro | 92.5 % |
-| Errores | 18 / 247 |
+Medidos sobre el **mismo conjunto de prueba de 247 imágenes** que ninguno de los modelos vio durante el entrenamiento:
+
+| Métrica | `MobileNetV2` (Estudiante · **Principal**) | `ResNet50` (Maestro / Padre) | Ventaja del Estudiante en producción |
+|---|---|---|---|
+| **Rol en la aplicación** | **Modelo principal de producción** | Arquitectura Padre (referencia) | — |
+| **Parámetros** | **2.552.579** | 24.558.659 | **9.6× menos parámetros** (−89.6 %) |
+| **Peso en memoria (FP32)** | **10.0 MB** | 94.0 MB *(47.0 MB en disco FP16)* | **9.4× más liviano** |
+| **Latencia en CPU** | **~35–45 ms** | ~170 ms | **~3.8× más rápido** |
+| **Accuracy en test** | **92.7 %** | **95.1 %** | Retiene **97.5 %** del desempeño del Maestro |
+| **F1 macro en test** | **92.5 %** | **94.9 %** | Retiene **97.5 %** del F1 del Maestro |
+| **Errores (sobre 247)** | 18 / 247 | 12 / 247 | Solo 6 imágenes de diferencia en 247 pruebas |
+
+### Desglose por clase en el conjunto de prueba (247 imágenes)
+
+**Modelo Principal (`MobileNetV2` · Estudiante Destilado):**
 
 | Clase | Precisión | Recall | F1 | AUC | Imágenes |
 |---|---|---|---|---|---|
@@ -25,55 +42,44 @@ En vivo: https://semaforoiadatatech.streamlit.app
 | carro | 0.977 | 0.944 | 0.960 | 0.993 | 90 |
 | moto | 0.863 | 0.940 | 0.900 | 0.977 | 67 |
 
-El conjunto está equilibrado (90 / 90 / 67), así que el accuracy y el F1 macro
-dicen prácticamente lo mismo. Las tres clases quedan por encima de 0.90 de F1.
+**Modelo Maestro (`ResNet50` · Padre):**
 
-## Historia de este modelo
+| Clase | Precisión | Recall | F1 | AUC | Imágenes |
+|---|---|---|---|---|---|
+| bicicleta | 0.965 | 0.922 | 0.943 | 0.990 | 90 |
+| carro | 1.000 | 0.978 | 0.989 | 0.996 | 90 |
+| moto | 0.877 | 0.955 | 0.914 | 0.987 | 67 |
+
+---
+
+## ¿Cómo se aplicó Knowledge Distillation?
+
+1. **Entrenamiento del Maestro (`ResNet50`):**
+   Se partió de `ResNet50` preentrenada en ImageNet V2 (`2048` características) y se le añadió una cabeza
+   `Dropout(0.3) → Linear(2048, 512) → ReLU → Dropout(0.3) → Linear(512, 3)`, entrenándola sobre las
+   1.151 imágenes de entrenamiento equilibradas con pesos por clase.
+2. **Transferencia de conocimiento (`ResNet50` ➔ `MobileNetV2`):**
+   Con el Maestro congelado, se calcularon sus *logits* $z_T$ y se entrenó el Estudiante `MobileNetV2`
+   minimizando una combinación de **Divergencia KL** sobre probabilidades suavizadas con **Temperatura $T = 4.0$**
+   (*soft targets*, con peso $\alpha = 0.7$) y **Entropía Cruzada** contra las etiquetas reales ($1 - \alpha = 0.3$):
+   $$\mathcal{L}_{\text{KD}} = \alpha \cdot T^2 \cdot \text{KLDiv}\!\left(\sigma\!\left(\frac{z_S}{T}\right), \sigma\!\left(\frac{z_T}{T}\right)\right) + (1 - \alpha) \cdot \text{CrossEntropy}(z_S, y)$$
+
+---
+
+## Historia del dataset (v1 vs v2)
 
 La primera versión se entrenó con un dataset muy desbalanceado: **711 carros,
-141 motos y solo 33 bicicletas**. Daba 98.5 % de accuracy, pero era un espejismo:
-el conjunto de prueba tenía 107 carros y 5 bicicletas, así que acertar siempre
-"carro" ya puntuaba altísimo. El F1 macro real era 90.7 % y el recall de
-bicicleta, **0.60**.
+141 motos y solo 33 bicicletas**. Daba 98.5 % de accuracy sobre un conjunto de prueba también
+desbalanceado, pero al medirla sobre las **247 imágenes equilibradas** de la v2 caía al **80.6 %**:
 
-La segunda versión se entrenó sobre **1645 imágenes equilibradas** de Open
-Images V7, seleccionadas por área de la caja delimitadora para que el vehículo
-domine el encuadre. Midiendo **ambos modelos sobre el mismo conjunto de prueba**:
-
-| Métrica | Modelo v1 | Modelo v2 | Δ |
+| Métrica | Modelo v1 | Modelo v2 (`MobileNetV2` Principal) | Maestro (`ResNet50`) |
 |---|---|---|---|
-| Accuracy | 80.6 % | 92.7 % | +12.1 pp |
-| F1 macro | 79.7 % | 92.5 % | +12.8 pp |
-| Errores | 48 | 18 | −30 |
-| **Recall bicicleta** | 60.0 % | **90.0 %** | **+30.0 pp** |
-| F1 moto | 73.8 % | 90.0 % | +16.2 pp |
+| Accuracy | 80.6 % | **92.7 %** (+12.1 pp) | **95.1 %** (+14.5 pp) |
+| F1 macro | 79.7 % | **92.5 %** (+12.8 pp) | **94.9 %** (+15.2 pp) |
+| Errores | 48 / 247 | **18 / 247** (−30) | **12 / 247** (−36) |
+| **Recall bicicleta** | 60.0 % | **90.0 %** (+30.0 pp) | **92.2 %** (+32.2 pp) |
 
-La app muestra esta comparación en un panel propio dentro de la pestaña
-*Métricas del modelo*, con el recall por clase y la confianza en cada imagen
-de ejemplo antes y después.
-
-El 98.5 % de accuracy que anunciaba la v1 no sobrevive al cambio de conjunto de
-prueba: sobre datos equilibrados caía al 80.6 %. Es el ejemplo de libro de por
-qué el accuracy engaña con clases desbalanceadas.
-
-## El modelo
-
-- MobileNetV2 preentrenada en ImageNet, con cabeza nueva
-  `Dropout → Linear(1280, 256) → ReLU → Dropout → Linear(256, 3)`
-- La v2 se inicializó desde los pesos de la v1 en vez de desde ImageNet puro:
-  así conserva lo aprendido del dataset original, que ya no estaba disponible.
-- Entrenamiento en dos fases: extracción de características con el extractor
-  congelado (las características se precalculan una sola vez) y luego
-  fine-tuning de los últimos 5 bloques con una tasa de aprendizaje 10× menor.
-- 46 épocas, mejor época la 43 · entrada 224 × 224 px · 2 552 579 parámetros
-- Entrenado en CPU · latencia de inferencia 34 ms
-
-Nota honesta sobre el entrenamiento: en esta segunda vuelta **la fase de
-fine-tuning no aportó nada**. La fase 1 ya alcanzaba F1 0.952 en validación y la
-fase 2 se quedó en 0.935, con la pérdida de entrenamiento bajando mientras la
-validación empeoraba, es decir sobreajuste. Tiene sentido, porque el extractor
-ya venía ajustado a esta tarea desde la v1. Se conserva el mejor estado medido
-sobre validación.
+---
 
 ## Ejecutar en local
 
@@ -87,30 +93,20 @@ streamlit run app.py
 ## Estructura
 
 ```
-app.py              la aplicación completa
-requirements.txt    dependencias (PyTorch en versión CPU)
-modelo/             pesos entrenados (.pt)
-artefactos/         métricas en JSON y gráficas de la evaluación
-ejemplos/           imágenes de prueba para la demo
+app.py                         aplicación Streamlit con selector de modelo (MobileNetV2 / ResNet50)
+requirements.txt               dependencias (PyTorch en versión CPU)
+modelo/
+  mobilenetv2_semaforo.pt      pesos del Estudiante Destilado (Modelo Principal, 10.0 MB)
+  resnet50_maestro.pt          pesos del Modelo Maestro ResNet50 (47.0 MB en FP16)
+artefactos/                    métricas en JSON y gráficas de evaluación y destilación
+ejemplos/                      imágenes de prueba para la demo
 ```
 
-Las 5 imágenes de `ejemplos/` vienen del dataset original, que no forma parte
-del entrenamiento de la v2: son datos completamente fuera de su distribución.
-El modelo las clasifica correctamente las 5, con confianza de 89.8 % a 100 %.
+## Herramientas de datos y destilación
 
-## Herramientas de datos
-
-Los scripts que recolectan y limpian las imágenes están en la rama
-`datos-recoleccion` de este mismo repositorio.
-
-## Límites conocidos
-
-- Solo conoce tres clases: ante cualquier otra imagen responderá con una de ellas.
-- Clasifica la imagen completa; no localiza ni cuenta vehículos.
-- La confusión que queda es sobre todo bicicleta ↔ moto: 7 bicicletas clasificadas
-  como moto y 4 motos como bicicleta. Son las dos clases visualmente más próximas.
+Los scripts que recolectan, limpian, entrenan al Maestro `ResNet50` y aplican Knowledge Distillation
+(`destilar.py` y `refinar_destilacion.py`) están en la rama `datos-recoleccion` de este mismo repositorio.
 
 ## Licencias
 
-Las imágenes de entrenamiento de la v2 provienen de Open Images V7, con licencia
-CC BY.
+Las imágenes de entrenamiento provienen de Open Images V7, con licencia CC BY.

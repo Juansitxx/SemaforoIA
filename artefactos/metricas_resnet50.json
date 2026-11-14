@@ -1,0 +1,85 @@
+{
+  "accuracy": 0.951417004048583,
+  "f1_macro": 0.9487438591371175,
+  "n_test": 247,
+  "errores": 12,
+  "por_clase": {
+    "bicicleta": {
+      "precision": 0.9651162790697675,
+      "recall": 0.9222222222222223,
+      "f1": 0.9431818181818181,
+      "soporte": 90,
+      "auc": 0.994762915782024
+    },
+    "carro": {
+      "precision": 1.0,
+      "recall": 0.9777777777777777,
+      "f1": 0.9887640449438202,
+      "soporte": 90,
+      "auc": 0.9986553432413305
+    },
+    "moto": {
+      "precision": 0.8767123287671232,
+      "recall": 0.9552238805970149,
+      "f1": 0.9142857142857143,
+      "soporte": 67,
+      "auc": 0.9898839137645108
+    }
+  },
+  "matriz_confusion": [
+    [
+      83,
+      0,
+      7
+    ],
+    [
+      0,
+      88,
+      2
+    ],
+    [
+      3,
+      0,
+      64
+    ]
+  ],
+  "clases": [
+    "bicicleta",
+    "carro",
+    "moto"
+  ],
+  "latencia": {
+    "cpu_ms": 201.9
+  },
+  "peso_mb": 94.0,
+  "peso_archivo_mb": 47.0,
+  "parametros_totales": 24558659,
+  "ejemplos": [
+    {
+      "ejemplo": "bicicleta_1",
+      "prediccion": "bicicleta",
+      "confianza": 0.9987252354621887
+    },
+    {
+      "ejemplo": "carro_1",
+      "prediccion": "carro",
+      "confianza": 0.9998306035995483
+    },
+    {
+      "ejemplo": "carro_2",
+      "prediccion": "carro",
+      "confianza": 0.9999935626983643
+    },
+    {
+      "ejemplo": "moto_1",
+      "prediccion": "moto",
+      "confianza": 0.9996634721755981
+    },
+    {
+      "ejemplo": "moto_2",
+      "prediccion": "moto",
+      "confianza": 0.9985694885253906
+    }
+  ],
+  "confianza_media_ejemplos": 0.999356472492218
+}
