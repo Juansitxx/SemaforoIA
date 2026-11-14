@@ -22,7 +22,7 @@ DIR_EJEMPLOS = AQUI / "ejemplos"
 UMBRAL_CONFIANZA = 0.60
 EMOJI = {"carro": "🚗", "moto": "🏍️", "bicicleta": "🚲"}
 
-st.set_page_config(page_title="SemaforoIA · Clasificador de vehículos", page_icon="🚦", layout="wide")
+st.set_page_config(page_title="SemaforoIA · Clasificador de vehículos", page_icon=" ", layout="wide")
 
 
 @st.cache_resource(show_spinner="Cargando el modelo…")
